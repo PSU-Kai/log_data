@@ -5,7 +5,7 @@ import pandas as pd
 file_path = "/home/pi/water_heaters_testings/dcs/build/debug/log.csv"
 
 # Constants
-POWER_CONSTANT = 4500
+
 INTERVAL_CONSTANT = 3600
 
 # Specify the path for the output CSV file
@@ -19,19 +19,21 @@ while True:
 
             for row in reader:
                 # Check if the row has the expected number of columns
-                if len(row) == 15:
+                if len(row) == 12:
                     last_valid_row = row
 
             if last_valid_row is not None:
                 energy_take_str = last_valid_row[-4]
                 energy_take = int(energy_take_str)  # Convert to integer
+                power_take_str = last_valid_row[3]
+                POWER_CONSTANT = int(power_take_str)
 
                 print("Energy Take:", energy_take)
 
                 # Calculate additional values
                 interval = INTERVAL_CONSTANT
                 power = POWER_CONSTANT
-                duration = energy_take / power
+                duration = power / energy_take
 
                 print("Interval:", interval)
                 print("Power:", power)
@@ -54,4 +56,5 @@ while True:
         print(f"An error occurred: {e}")
 
     # Wait for 60 seconds before checking again
-    time.sleep(60)
+    time.sleep(30)
+
